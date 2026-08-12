@@ -34,15 +34,15 @@ const dict = {
       pillars: [
         {
           label: 'Experiență',
-          text: 'Neuropsihologie și neuroreabilitare în Marea Britanie, servicii de sănătate mintală pentru persoane cu dificultăți complexe, dizabilitate intelectuală și autism.',
+          text: 'Neuropsihologie, neuroreabilitare și sănătate mintală în Marea Britanie.',
         },
         {
           label: 'Educație',
-          text: 'Facultatea de Psihologie, Universitatea din București. Master în Applied Psychology with Professional Experience, Coventry University, Marea Britanie.',
+          text: 'Facultatea de Psihologie – Universitatea din București. Master in Applied Psychology with Professional Experience – Coventry University, Marea Britanie.',
         },
         {
-          label: 'Formare',
-          text: 'Formare de bază în psihoterapie integrativă, în curs, complementară practicii clinice.',
+          label: 'Formare în psihoterapie',
+          text: 'Formare în psihoterapie integrativă – în curs.',
         },
       ],
     },
