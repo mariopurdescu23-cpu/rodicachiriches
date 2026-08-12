@@ -90,7 +90,9 @@ export const CalendarPicker: React.FC<{
       <div className="mt-1 grid grid-cols-7 gap-1">
         {weeks.flat().map((d, i) => {
           const inMonth = d.getMonth() === viewMonth.getMonth()
-          const disabled = d < minDate || d > maxDate || (isDayDisabled ? isDayDisabled(d) : false)
+          const rangeDisabled = d < minDate || d > maxDate
+          const weekendDisabled = isDayDisabled ? isDayDisabled(d) : false
+          const disabled = rangeDisabled || weekendDisabled
           const isSelected = selected && sameDay(d, selected)
           return (
             <button
@@ -101,8 +103,10 @@ export const CalendarPicker: React.FC<{
               className={`aspect-square rounded-lg text-sm transition-colors ${
                 !inMonth
                   ? 'text-ink/10'
-                  : disabled
-                  ? 'cursor-not-allowed text-ink/20'
+                  : rangeDisabled
+                  ? 'cursor-not-allowed text-ink/15'
+                  : weekendDisabled
+                  ? 'cursor-not-allowed bg-ink/5 text-ink/30'
                   : isSelected
                   ? 'bg-purple font-semibold text-white shadow-card'
                   : 'text-ink/70 hover:bg-mist'
