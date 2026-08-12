@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useLang } from '../i18n'
 import { useReveal } from '../hooks/useReveal'
 import { Reveal } from './Reveal'
@@ -9,6 +9,7 @@ import {
   PHONE_UK_DISPLAY,
   PHONE_UK_TEL,
   EMAIL_DISPLAY,
+  buildContactMailtoLink,
 } from '../siteInfo'
 
 const PhoneIcon = () => (
@@ -20,6 +21,15 @@ const PhoneIcon = () => (
 export const Contact: React.FC = () => {
   const { t } = useLang()
   const ref = useReveal<HTMLDivElement>()
+
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [message, setMessage] = useState('')
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    window.location.href = buildContactMailtoLink({ name, email, message })
+  }
 
   return (
     <section id="contact" className="py-24 md:py-32 bg-mist/50">
@@ -101,6 +111,60 @@ export const Contact: React.FC = () => {
             </a>
           </Reveal>
         </div>
+
+        <Reveal delay={320}>
+          <form
+            onSubmit={handleSubmit}
+            className="mt-5 rounded-2xl bg-white p-6 md:p-8 shadow-card"
+          >
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label htmlFor="contact-name" className="mb-1.5 block text-sm font-medium text-ink/70">
+                  {t.contact.formName}
+                </label>
+                <input
+                  id="contact-name"
+                  type="text"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full rounded-xl border border-ink/12 px-4 py-3 text-[15px] outline-none transition-colors focus:border-purple"
+                />
+              </div>
+              <div>
+                <label htmlFor="contact-email" className="mb-1.5 block text-sm font-medium text-ink/70">
+                  {t.contact.formEmail}
+                </label>
+                <input
+                  id="contact-email"
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full rounded-xl border border-ink/12 px-4 py-3 text-[15px] outline-none transition-colors focus:border-purple"
+                />
+              </div>
+            </div>
+
+            <div className="mt-5">
+              <label htmlFor="contact-message" className="mb-1.5 block text-sm font-medium text-ink/70">
+                {t.contact.formMessage}
+              </label>
+              <textarea
+                id="contact-message"
+                rows={4}
+                required
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                className="w-full resize-none rounded-xl border border-ink/12 px-4 py-3 text-[15px] outline-none transition-colors focus:border-purple"
+              />
+            </div>
+
+            <button type="submit" className="btn-primary mt-6 w-full sm:w-auto">
+              {t.contact.formSubmit}
+            </button>
+          </form>
+        </Reveal>
       </div>
     </section>
   )

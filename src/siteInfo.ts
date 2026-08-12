@@ -11,6 +11,18 @@ export const PHONE_UK_TEL = '+447470433212'
 
 export const EMAIL_DISPLAY = 'mariachiriches@outlook.com'
 
+/** Builds a mailto: link pre-filled with the contact form's name, email and message. */
+export function buildContactMailtoLink(params: { name: string; email: string; message: string }) {
+  const subject = `Mesaj nou de pe site — ${params.name}`
+  const body = [
+    `Nume: ${params.name}`,
+    `Email: ${params.email}`,
+    '',
+    params.message,
+  ].join('\n')
+  return `mailto:${EMAIL_DISPLAY}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+}
+
 /** Builds a wa.me link pre-filled with a booking brief, ready to send. */
 export function buildWhatsAppBookingLink(params: {
   name: string
