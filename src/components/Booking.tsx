@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useLang } from '../i18n'
 import { useReveal } from '../hooks/useReveal'
 import {
@@ -9,6 +9,7 @@ import {
   formatFullDateLabel,
   isSlotBooked,
   markSlotBooked,
+  pruneExpiredSlots,
 } from '../lib/booking'
 import { buildWhatsAppBookingLink, PHONE_RO_DISPLAY } from '../siteInfo'
 
@@ -31,6 +32,10 @@ export const Booking: React.FC = () => {
   const [stage, setStage] = useState<Stage>('form')
 
   const dateKey = dateToKey(selectedDate)
+
+  useEffect(() => {
+    pruneExpiredSlots()
+  }, [])
 
   const handlePickDate = (d: Date) => {
     setSelectedDate(d)

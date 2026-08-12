@@ -36,6 +36,21 @@ export function isSlotBooked(dateKey: string, time: string): boolean {
   return getBookedSlots().includes(slotKey(dateKey, time))
 }
 
+/** Removes stored slots for dates already in the past, so local storage doesn't grow forever. */
+export function pruneExpiredSlots() {
+  if (typeof window === 'undefined') return
+  try {
+    const today = dateToKey(new Date())
+    const slots = getBookedSlots()
+    const kept = slots.filter((key) => key.split('_')[0] >= today)
+    if (kept.length !== slots.length) {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(kept))
+    }
+  } catch {
+    // ignore storage errors
+  }
+}
+
 /** Returns the next `count` weekdays (Mon–Fri), starting tomorrow. */
 export function nextBusinessDays(count: number): Date[] {
   const days: Date[] = []
