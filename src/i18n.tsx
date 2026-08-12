@@ -82,18 +82,41 @@ const dict = {
       subtitle:
         'Ședințe individuale, online, în limba română sau engleză — construite în jurul nevoilor tale.',
       items: [
-        { title: 'Psihologie clinică', text: 'Sprijin psihologic clinic, oferit sub supervizare profesională.' },
-        { title: 'Suport psihologic', text: 'Un spațiu de ascultare și înțelegere, fără judecată.' },
-        { title: 'Ședințe online', text: 'Acces facil, oriunde te-ai afla, prin ședințe desfășurate online.' },
-        { title: 'Ședințe în limba română', text: 'Pentru clienți din România și din diaspora română.' },
-        { title: 'Ședințe în limba engleză', text: 'Pentru clienți vorbitori de limba engleză.' },
-        { title: 'Anxietate, stres și gestionarea emoțiilor', text: 'Sprijin pentru înțelegerea și reglarea emoțiilor.' },
-        { title: 'Autocunoaștere și stimă de sine', text: 'Explorarea propriilor tipare și resurse interioare.' },
-        { title: 'Relații și limite personale', text: 'Comunicare, limite sănătoase și tipare relaționale.' },
-        { title: 'Adaptare la schimbare', text: 'Sprijin în perioade de tranziție sau dificultăți de adaptare.' },
-        { title: 'Dezvoltare personală', text: 'Înțelegerea propriilor tipare de gândire și comportament.' },
+        {
+          title: 'Psihologie clinică',
+          text: 'Evaluare și testare psihologică, diagnostic psihologic și recomandări adaptate nevoilor tale.',
+        },
+        { title: 'Suport psihologic', text: 'Un spațiu de ascultare, înțelegere și sprijin, fără judecată.' },
+        {
+          title: 'Anxietate, stres și gestionarea emoțiilor',
+          text: 'Sprijin pentru înțelegerea și gestionarea emoțiilor dificile.',
+        },
+        {
+          title: 'Autocunoaștere și stimă de sine',
+          text: 'Explorarea tiparelor personale, a resurselor interioare și dezvoltarea unei relații mai bune cu tine.',
+        },
+        {
+          title: 'Relații și limite personale',
+          text: 'Înțelegerea tiparelor relaționale, îmbunătățirea comunicării și construirea unor limite sănătoase.',
+        },
+        {
+          title: 'Adaptare la schimbare',
+          text: 'Sprijin în perioade de tranziție, schimbări importante sau dificultăți de adaptare.',
+        },
+        {
+          title: 'Încredere în sine',
+          text: 'Explorarea dificultăților legate de încrederea în sine și dezvoltarea unei perspective mai echilibrate asupra propriei persoane.',
+        },
+        {
+          title: 'Dezvoltare personală',
+          text: 'Clarificarea nevoilor, valorilor și obiectivelor personale și identificarea direcțiilor importante pentru tine.',
+        },
+        {
+          title: 'Dificultăți relaționale',
+          text: 'Explorarea dificultăților din relații și a tiparelor care influențează modul în care te raportezi la ceilalți.',
+        },
       ],
-      note: 'Detalii precum durata ședințelor și tarifele pot fi discutate direct, la programare.',
+      note: 'Pentru informații actualizate despre durata ședințelor, tarife și disponibilitate, te invit să mă contactezi.',
     },
     booking: {
       eyebrow: 'Programare',
@@ -242,18 +265,41 @@ const dict = {
       subtitle:
         'Individual, online sessions, in Romanian or English — built around what you need.',
       items: [
-        { title: 'Clinical psychology', text: 'Clinical psychological support, offered under professional supervision.' },
-        { title: 'Psychological support', text: 'A space to be heard and understood, without judgment.' },
-        { title: 'Online sessions', text: 'Easy access, wherever you are, through online sessions.' },
-        { title: 'Sessions in Romanian', text: 'For clients in Romania and across the Romanian diaspora.' },
-        { title: 'Sessions in English', text: 'For English-speaking clients.' },
-        { title: 'Anxiety, stress and emotion regulation', text: 'Support for understanding and regulating emotions.' },
-        { title: 'Self-understanding and self-esteem', text: 'Exploring your own patterns and inner resources.' },
-        { title: 'Relationships and personal boundaries', text: 'Communication, healthy boundaries and relational patterns.' },
-        { title: 'Adapting to change', text: 'Support through transitions or periods of adjustment.' },
-        { title: 'Personal development', text: 'Understanding your own patterns of thought and behaviour.' },
+        {
+          title: 'Clinical psychology',
+          text: 'Psychological assessment and testing, psychological diagnosis and recommendations tailored to your needs.',
+        },
+        { title: 'Psychological support', text: 'A space to be heard, understood and supported, without judgment.' },
+        {
+          title: 'Anxiety, stress and emotion regulation',
+          text: 'Support for understanding and managing difficult emotions.',
+        },
+        {
+          title: 'Self-understanding and self-esteem',
+          text: 'Exploring your own patterns and inner resources, and building a better relationship with yourself.',
+        },
+        {
+          title: 'Relationships and personal boundaries',
+          text: 'Understanding relational patterns, improving communication and building healthy boundaries.',
+        },
+        {
+          title: 'Adapting to change',
+          text: 'Support through transitions, major changes, or periods of adjustment.',
+        },
+        {
+          title: 'Self-confidence',
+          text: 'Exploring difficulties around self-confidence and developing a more balanced view of yourself.',
+        },
+        {
+          title: 'Personal development',
+          text: 'Clarifying your needs, values and goals, and identifying the directions that matter to you.',
+        },
+        {
+          title: 'Relational difficulties',
+          text: 'Exploring difficulties in relationships and the patterns that shape how you relate to others.',
+        },
       ],
-      note: 'Details such as session length and fees can be discussed directly, when booking.',
+      note: 'For up-to-date information on session length, fees and availability, feel free to get in touch.',
     },
     booking: {
       eyebrow: 'Booking',
