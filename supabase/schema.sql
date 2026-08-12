@@ -25,11 +25,13 @@ create unique index if not exists bookings_active_slot_unique
 alter table bookings enable row level security;
 
 -- Oricine (vizitatorii site-ului) poate trimite o cerere nouă de programare.
+-- Nu verificăm aici explicit "status = 'new'": vizitatorii nu au voie oricum să seteze
+-- coloana status (vezi GRANT-urile de mai jos), deci ea ia mereu valoarea implicită 'new'.
 drop policy if exists "public can insert bookings" on bookings;
 create policy "public can insert bookings"
   on bookings for insert
   to anon
-  with check (status = 'new');
+  with check (true);
 
 -- Vizitatorii pot vedea doar ce ore active (necancelate) există, ca să știe ce e liber —
 -- fără să vadă numele/telefonul altor persoane (vezi și GRANT-urile pe coloane mai jos).
