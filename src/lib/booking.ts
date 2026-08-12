@@ -1,6 +1,21 @@
-export const TIME_SLOTS = ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00']
+export const TIME_SLOTS = [
+  '08:00',
+  '09:00',
+  '10:00',
+  '11:00',
+  '12:00',
+  '13:00',
+  '14:00',
+  '15:00',
+  '16:00',
+  '17:00',
+  '18:00',
+  '19:00',
+  '20:00',
+  '21:00',
+]
 
-/** Returns the next `count` weekdays (Mon–Fri), starting tomorrow. */
+/** Returns the next `count` days, starting tomorrow (weekends included — availability spans every day). */
 export function nextBusinessDays(count: number): Date[] {
   const days: Date[] = []
   const cursor = new Date()
@@ -8,10 +23,7 @@ export function nextBusinessDays(count: number): Date[] {
   cursor.setDate(cursor.getDate() + 1)
 
   while (days.length < count) {
-    const day = cursor.getDay()
-    if (day !== 0 && day !== 6) {
-      days.push(new Date(cursor))
-    }
+    days.push(new Date(cursor))
     cursor.setDate(cursor.getDate() + 1)
   }
   return days

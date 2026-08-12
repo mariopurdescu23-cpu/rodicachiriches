@@ -191,7 +191,6 @@ export const Booking: React.FC = () => {
                         onSelect={handlePickDate}
                         minDate={minDate}
                         maxDate={maxDate}
-                        isDayDisabled={(d) => d.getDay() === 0 || d.getDay() === 6}
                       />
                     </div>
                   )}

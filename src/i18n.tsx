@@ -25,7 +25,7 @@ const dict = {
     },
     about: {
       eyebrow: 'Despre mine',
-      title: 'Un spațiu profesionist, construit pe experiență reală',
+      title: 'Experiență profesională, într-o abordare centrată pe tine',
       p1: 'Sunt psiholog clinician practicant sub supervizare, înregistrată la Colegiul Psihologilor din România, și lucrez atât în limba română, cât și în limba engleză.',
       p2: 'În paralel cu practica mea privată, lucrez în Marea Britanie în domeniul neuropsihologiei și neuroreabilitării, în cadrul unui serviciu specializat pentru persoane cu leziuni cerebrale dobândite.',
       p3: 'Experiența mea profesională din UK include, de asemenea, lucrul în servicii de sănătate mintală cu persoane cu dificultăți complexe, dizabilitate intelectuală și autism.',
@@ -169,7 +169,7 @@ const dict = {
       about: 'About',
       how: 'How I work',
       services: 'Services',
-      diaspora: 'Diaspora',
+      diaspora: 'Romanians Abroad',
       faq: 'FAQ',
       contact: 'Contact',
       cta: 'Book a session',
@@ -208,7 +208,7 @@ const dict = {
     },
     how: {
       eyebrow: 'How I work',
-      title: 'Everyone arrives with their own story',
+      title: 'Therapy starts with understanding you',
       p1: 'To me, psychology isn\u2019t about applying the same method to everyone. Each person comes with their own story, their own experiences, and their own pace.',
       p2: 'I want sessions to offer a safe, confidential and non-judgmental space, where we can understand together the difficulties you\u2019re facing, as well as the resources you already have.',
       note: 'My background in neuropsychology also gives me a perspective on the relationship between the brain, cognition, emotions and behaviour.',
@@ -229,7 +229,7 @@ const dict = {
       highlight: 'Together, towards your authentic self.',
     },
     diaspora: {
-      eyebrow: 'For Romanians in the UK and the diaspora',
+      eyebrow: 'For Romanians in the UK and Abroad',
       title: 'I understand this context, because I live it too',
       p1: 'I know that living in another country can bring particular challenges: adapting to a different culture, the distance from family, a sense of belonging, relationships, professional pressure, or the feeling of living between two worlds.',
       p2: 'Being based and working professionally in the United Kingdom, I understand this context directly.',
