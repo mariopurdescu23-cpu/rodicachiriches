@@ -1,12 +1,7 @@
 import React, { useState } from 'react'
 import { useLang } from '../i18n'
 import { useReveal } from '../hooks/useReveal'
-
-const PHONE_RO = '+40 756 262 594'
-const PHONE_RO_TEL = '+40756262594'
-const PHONE_UK = '+44 7470 433 212'
-const PHONE_UK_TEL = '+447470433212'
-const EMAIL = 'contact@rodicachiriches.ro'
+import { PHONE_RO_DISPLAY, PHONE_RO_TEL, PHONE_UK_DISPLAY, PHONE_UK_TEL, EMAIL_DISPLAY } from '../siteInfo'
 
 export const Contact: React.FC = () => {
   const { t } = useLang()
@@ -41,11 +36,14 @@ export const Contact: React.FC = () => {
               </span>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-ink/45">{t.contact.phoneUK}</p>
-                <p className="text-[17px] font-semibold text-ink">{PHONE_UK}</p>
+                <p className="text-[17px] font-semibold text-ink">{PHONE_UK_DISPLAY}</p>
               </div>
             </a>
 
-            <div className="flex items-center gap-4 rounded-2xl bg-white p-5 shadow-card">
+            <a
+              href={`tel:${PHONE_RO_TEL}`}
+              className="flex items-center gap-4 rounded-2xl bg-white p-5 shadow-card transition-transform hover:-translate-y-0.5"
+            >
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-mist text-purple">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
@@ -53,9 +51,9 @@ export const Contact: React.FC = () => {
               </span>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-ink/45">{t.contact.phoneRO}</p>
-                <p className="text-[17px] font-semibold text-ink/50">{PHONE_RO}</p>
+                <p className="text-[17px] font-semibold text-ink">{PHONE_RO_DISPLAY}</p>
               </div>
-            </div>
+            </a>
 
             <div className="flex items-center gap-4 rounded-2xl bg-white p-5 shadow-card">
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-mist text-purple">
@@ -67,7 +65,7 @@ export const Contact: React.FC = () => {
               </span>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-ink/45">{t.contact.email}</p>
-                <p className="text-[17px] font-semibold text-ink/50">{EMAIL}</p>
+                <p className="text-[17px] font-semibold text-ink/50">{EMAIL_DISPLAY}</p>
               </div>
             </div>
 
