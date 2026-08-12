@@ -2,7 +2,13 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useLang } from '../i18n'
 import { useReveal } from '../hooks/useReveal'
 import { TIME_SLOTS, nextBusinessDays, dateToKey, formatFullDateLabel } from '../lib/booking'
-import { fetchBookedTimes, createBooking, subscribeToDateChanges } from '../lib/bookingApi'
+import {
+  fetchBookedTimes,
+  fetchBlockedTimes,
+  createBooking,
+  subscribeToDateChanges,
+  subscribeToBlockChanges,
+} from '../lib/bookingApi'
 import { PHONE_RO_DISPLAY } from '../siteInfo'
 import { CalendarPicker } from './CalendarPicker'
 
@@ -27,6 +33,8 @@ export const Booking: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(defaultDate)
   const [selectedTime, setSelectedTime] = useState<string | null>(null)
   const [bookedTimes, setBookedTimes] = useState<string[]>([])
+  const [blockedTimes, setBlockedTimes] = useState<string[]>([])
+  const [dayFullyBlocked, setDayFullyBlocked] = useState(false)
   const [loadingSlots, setLoadingSlots] = useState(true)
   const [calendarOpen, setCalendarOpen] = useState(false)
   const calendarRef = useRef<HTMLDivElement>(null)
@@ -41,27 +49,38 @@ export const Booking: React.FC = () => {
   const dateKey = dateToKey(selectedDate)
 
   // Live, shared availability: fetch on date change, then stay in sync via realtime updates
-  // so a slot someone else just booked disappears immediately for every visitor.
+  // so a slot someone else just booked — or one the practitioner just blocked — disappears
+  // immediately for every visitor.
   useEffect(() => {
     let active = true
     setLoadingSlots(true)
 
-    fetchBookedTimes(dateKey).then((times) => {
-      if (active) {
-        setBookedTimes(times)
+    const load = () => {
+      Promise.all([fetchBookedTimes(dateKey), fetchBlockedTimes(dateKey)]).then(([booked, blocked]) => {
+        if (!active) return
+        setBookedTimes(booked)
+        setBlockedTimes(blocked.times)
+        setDayFullyBlocked(blocked.wholeDay)
         setLoadingSlots(false)
-      }
-    })
+      })
+    }
 
-    const unsubscribe = subscribeToDateChanges(dateKey, () => {
-      fetchBookedTimes(dateKey).then((times) => active && setBookedTimes(times))
-    })
+    load()
+
+    const unsubscribeBookings = subscribeToDateChanges(dateKey, load)
+    const unsubscribeBlocks = subscribeToBlockChanges(dateKey, load)
 
     return () => {
       active = false
-      unsubscribe()
+      unsubscribeBookings()
+      unsubscribeBlocks()
     }
   }, [dateKey])
+
+  const unavailableTimes = useMemo(
+    () => (dayFullyBlocked ? TIME_SLOTS : [...bookedTimes, ...blockedTimes]),
+    [dayFullyBlocked, bookedTimes, blockedTimes]
+  )
 
   useEffect(() => {
     if (!calendarOpen) return
@@ -82,7 +101,7 @@ export const Booking: React.FC = () => {
   }
 
   const handlePickTime = (time: string) => {
-    if (bookedTimes.includes(time)) return
+    if (unavailableTimes.includes(time)) return
     setSelectedTime(time)
     setError(null)
   }
@@ -93,7 +112,7 @@ export const Booking: React.FC = () => {
       setError(t.booking.noTimeSelected)
       return
     }
-    if (bookedTimes.includes(selectedTime)) {
+    if (unavailableTimes.includes(selectedTime)) {
       setError(t.booking.slotBookedNotice)
       setSelectedTime(null)
       return
@@ -202,10 +221,12 @@ export const Booking: React.FC = () => {
                 <label className="mb-3 block text-sm font-semibold text-ink/70">{t.booking.formTime}</label>
                 {loadingSlots ? (
                   <p className="text-sm text-ink/40">{t.booking.loadingSlots}</p>
+                ) : dayFullyBlocked ? (
+                  <p className="rounded-xl bg-ink/5 px-4 py-3 text-sm text-ink/50">{t.booking.dayUnavailable}</p>
                 ) : (
                   <div className="grid grid-cols-4 gap-2.5 sm:grid-cols-4">
                     {TIME_SLOTS.map((time) => {
-                      const booked = bookedTimes.includes(time)
+                      const booked = unavailableTimes.includes(time)
                       const isSelected = selectedTime === time
                       return (
                         <button

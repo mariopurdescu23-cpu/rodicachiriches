@@ -33,6 +33,86 @@ export async function fetchBookedTimes(date: string): Promise<string[]> {
   return (data ?? []).map((row) => row.time as string)
 }
 
+export interface AvailabilityBlock {
+  id: string
+  date: string
+  time: string | null
+  note: string | null
+}
+
+/**
+ * Returns the times blocked by the practitioner for a given date.
+ * If the whole day is blocked (a row with time = null exists), returns { wholeDay: true }.
+ */
+export async function fetchBlockedTimes(date: string): Promise<{ times: string[]; wholeDay: boolean }> {
+  const { data, error } = await supabase.from('availability_blocks').select('time').eq('date', date)
+  if (error) {
+    // eslint-disable-next-line no-console
+    console.error('fetchBlockedTimes error', error)
+    return { times: [], wholeDay: false }
+  }
+  const rows = data ?? []
+  const wholeDay = rows.some((r) => r.time === null)
+  const times = rows.map((r) => r.time).filter((t): t is string => t !== null)
+  return { times, wholeDay }
+}
+
+/** Admin: lists all blocks for a given date (with ids, so they can be removed individually). */
+export async function fetchBlocksForDate(date: string): Promise<AvailabilityBlock[]> {
+  const { data, error } = await supabase
+    .from('availability_blocks')
+    .select('*')
+    .eq('date', date)
+    .order('time', { ascending: true, nullsFirst: true })
+  if (error) {
+    // eslint-disable-next-line no-console
+    console.error('fetchBlocksForDate error', error)
+    return []
+  }
+  return (data ?? []) as AvailabilityBlock[]
+}
+
+/** Admin: blocks a specific time slot (or the whole day, if time is null). */
+export async function createBlock(date: string, time: string | null, note?: string) {
+  return supabase.from('availability_blocks').insert({ date, time, note: note || null })
+}
+
+/** Admin: removes a block, freeing that slot (or the whole day) again. */
+export async function deleteBlock(id: string) {
+  return supabase.from('availability_blocks').delete().eq('id', id)
+}
+
+/** Admin: removes every block for a date (used by "unblock whole day"). */
+export async function deleteAllBlocksForDate(date: string) {
+  return supabase.from('availability_blocks').delete().eq('date', date)
+}
+
+export function subscribeToBlockChanges(date: string, onChange: () => void) {
+  const channel = supabase
+    .channel(`blocks-${date}`)
+    .on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'availability_blocks', filter: `date=eq.${date}` },
+      onChange
+    )
+    .subscribe()
+
+  return () => {
+    supabase.removeChannel(channel)
+  }
+}
+
+export function subscribeToAllBlockChanges(onChange: () => void) {
+  const channel = supabase
+    .channel('blocks-admin')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'availability_blocks' }, onChange)
+    .subscribe()
+
+  return () => {
+    supabase.removeChannel(channel)
+  }
+}
+
 /** Creates a new booking request. Fails with a Postgres unique-violation if the slot was just taken by someone else. */
 export async function createBooking(payload: BookingPayload): Promise<{ error: string | null }> {
   const { error } = await supabase.from('bookings').insert({

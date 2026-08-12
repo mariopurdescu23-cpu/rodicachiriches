@@ -66,6 +66,7 @@ Te loghezi cu emailul și parola create la pasul 1.3. De acolo poți:
 
 - vedea toate cererile de programare, în timp real, pe măsură ce vin;
 - filtra după status (Noi / Confirmate / Finalizate / Anulate);
+- gestiona propria disponibilitate din tab-ul „Disponibilitate": poți bloca o zi întreagă (concediu, indisponibilitate) sau doar ore individuale, direct din calendar — fără nicio modificare de cod. Blocajele se reflectă live pe site, exact ca o programare reală.
 - confirma, marca drept finalizată sau anula o programare (anularea eliberează automat ora, pentru toți vizitatorii);
 - adăuga notițe interne pe fiecare client — practic un mini-CRM cu istoricul fiecărei persoane.
 

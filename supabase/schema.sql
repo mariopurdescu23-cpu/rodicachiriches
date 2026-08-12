@@ -69,3 +69,43 @@ grant insert (date, time, name, phone, language, message) on bookings to anon;
 
 -- Contul autentificat (admin) are acces normal, complet, pe toate coloanele.
 grant select, insert, update, delete on bookings to authenticated;
+
+
+-- ============================================================================
+-- Disponibilitate gestionată de psiholog (blocare/deblocare zile sau ore),
+-- din panoul de admin — fără nicio modificare de cod.
+-- ============================================================================
+
+create table if not exists availability_blocks (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  date date not null,
+  -- time = NULL înseamnă "toată ziua e blocată"; altfel, doar acea oră (ex. '14:00') e blocată.
+  time text,
+  note text
+);
+
+-- Nu permite blocaje duplicate pe aceeași zi + oră (sau două blocaje "toată ziua" pe aceeași dată).
+create unique index if not exists availability_blocks_unique
+  on availability_blocks (date, coalesce(time, '__DAY__'));
+
+alter table availability_blocks enable row level security;
+
+-- Vizitatorii pot vedea ce e blocat, ca să știe ce ore nu sunt disponibile.
+drop policy if exists "public can view blocks" on availability_blocks;
+create policy "public can view blocks"
+  on availability_blocks for select
+  to anon
+  using (true);
+
+-- Doar contul autentificat (psihologul) poate crea/edita/șterge blocaje.
+drop policy if exists "admin can manage blocks" on availability_blocks;
+create policy "admin can manage blocks"
+  on availability_blocks for all
+  to authenticated
+  using (true)
+  with check (true);
+
+revoke select on availability_blocks from anon;
+grant select (date, time) on availability_blocks to anon;
+grant select, insert, update, delete on availability_blocks to authenticated;
