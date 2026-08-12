@@ -98,7 +98,7 @@ const dict = {
     booking: {
       eyebrow: 'Programare',
       title: 'Programează o primă discuție',
-      text: 'Alege o zi și o oră disponibilă, completează câteva detalii, iar cererea ta va fi trimisă direct pe WhatsApp, gata de expediat.',
+      text: 'Alege o zi și o oră disponibilă și completează câteva detalii — programarea se rezervă imediat.',
       cta: 'Programează o ședință',
       formName: 'Nume',
       formPhone: 'Telefon',
@@ -108,7 +108,7 @@ const dict = {
       formDate: 'Alege o zi',
       formTime: 'Alege o oră',
       formMessage: 'Un scurt context (opțional)',
-      formSubmit: 'Trimite pe WhatsApp',
+      formSubmit: 'Trimite programarea',
       noTimeSelected: 'Selectează mai întâi o zi și o oră.',
       slotUnavailable: 'Indisponibil',
       slotBookedNotice: 'Această oră a fost deja solicitată — alege alta.',
@@ -119,7 +119,7 @@ const dict = {
         'Disponibilitatea este partajată, în timp real, între toți vizitatorii site-ului.',
       successTitle: 'Cererea ta a fost înregistrată',
       successText:
-        'Am deschis WhatsApp cu mesajul completat — trimite-l pentru o confirmare rapidă. Ora a fost rezervată pentru tine.',
+        'Ora a fost rezervată pentru tine. Vei fi contactat(ă) în curând pentru confirmare.',
     },
     faq: {
       eyebrow: 'Întrebări frecvente',
@@ -259,7 +259,7 @@ const dict = {
     booking: {
       eyebrow: 'Booking',
       title: 'Book an initial conversation',
-      text: 'Pick an available day and time, add a few details, and your request will be sent straight to WhatsApp, ready to send.',
+      text: 'Pick an available day and time and add a few details — the booking is reserved right away.',
       cta: 'Book a session',
       formName: 'Name',
       formPhone: 'Phone',
@@ -269,7 +269,7 @@ const dict = {
       formDate: 'Choose a day',
       formTime: 'Choose a time',
       formMessage: 'A short note (optional)',
-      formSubmit: 'Send via WhatsApp',
+      formSubmit: 'Send booking request',
       noTimeSelected: 'Choose a day and a time first.',
       slotUnavailable: 'Unavailable',
       slotBookedNotice: 'This time has already been requested — pick another.',
@@ -278,8 +278,7 @@ const dict = {
       loadingSlots: 'Loading available times…',
       disclaimer: 'Availability is shared in real time across every visitor to the site.',
       successTitle: 'Your request has been recorded',
-      successText:
-        'We opened WhatsApp with your message filled in — send it for a quick confirmation. The time has been reserved for you.',
+      successText: 'The time has been reserved for you. We\u2019ll be in touch shortly to confirm.',
     },
     faq: {
       eyebrow: 'Frequently asked questions',

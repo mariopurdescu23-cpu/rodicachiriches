@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useLang } from '../i18n'
 import { useReveal } from '../hooks/useReveal'
-import { TIME_SLOTS, nextBusinessDays, dateToKey, formatDayLabel, formatFullDateLabel } from '../lib/booking'
+import { TIME_SLOTS, nextBusinessDays, dateToKey, formatDayLabel } from '../lib/booking'
 import { fetchBookedTimes, createBooking, subscribeToDateChanges } from '../lib/bookingApi'
-import { buildWhatsAppBookingLink, PHONE_RO_DISPLAY } from '../siteInfo'
+import { PHONE_RO_DISPLAY } from '../siteInfo'
 
 type Stage = 'form' | 'success'
 
@@ -99,16 +99,6 @@ export const Booking: React.FC = () => {
       setSubmitting(false)
       return
     }
-
-    const link = buildWhatsAppBookingLink({
-      name,
-      phone,
-      language: language === 'ro' ? t.booking.langRo : t.booking.langEn,
-      dateLabel: formatFullDateLabel(selectedDate, locale),
-      time: selectedTime,
-      message,
-    })
-    window.open(link, '_blank', 'noopener,noreferrer')
 
     setSubmitting(false)
     setStage('success')
@@ -274,10 +264,7 @@ export const Booking: React.FC = () => {
               )}
 
               <button type="submit" disabled={submitting} className="btn-primary w-full gap-2.5 disabled:opacity-60">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M12.04 2c-5.52 0-10 4.48-10 10 0 1.76.46 3.48 1.34 5L2 22l5.13-1.35A9.96 9.96 0 0 0 12.04 22c5.52 0 10-4.48 10-10s-4.48-10-10-10Zm5.85 14.32c-.25.7-1.45 1.34-2 1.42-.51.08-1.16.11-1.87-.12-.43-.14-.98-.32-1.68-.63-2.96-1.28-4.89-4.25-5.04-4.45-.15-.2-1.2-1.6-1.2-3.06 0-1.45.76-2.16 1.03-2.46.27-.3.59-.37.79-.37.2 0 .4 0 .57.01.18.01.43-.07.68.52.25.6.85 2.06.93 2.21.08.15.13.32.03.52-.1.2-.15.32-.3.5-.15.17-.31.39-.44.52-.15.15-.3.31-.13.6.17.3.76 1.26 1.64 2.04 1.13 1 2.08 1.32 2.38 1.47.3.15.47.13.65-.08.18-.2.76-.88.96-1.19.2-.3.4-.25.68-.15.27.1 1.75.83 2.05.98.3.15.5.22.57.35.08.13.08.72-.17 1.42Z" />
-                </svg>
-                {t.booking.formSubmit}
+                {submitting ? '…' : t.booking.formSubmit}
               </button>
 
               <p className="text-center text-xs text-ink/40">{t.booking.disclaimer}</p>
