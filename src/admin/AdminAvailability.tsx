@@ -12,6 +12,17 @@ import {
 } from '../lib/bookingApi'
 import { CalendarPicker } from '../components/CalendarPicker'
 
+function describeError(err: unknown): string {
+  const message = (err as { message?: string })?.message || String(err)
+  if (/relation .*availability_blocks.* does not exist/i.test(message)) {
+    return 'Tabela "availability_blocks" nu există încă în baza de date. Rulează migrarea SQL (vezi README, secțiunea Disponibilitate) în Supabase → SQL Editor, apoi reîncearcă.'
+  }
+  if (/permission denied|row-level security|rls/i.test(message)) {
+    return 'Acces refuzat de baza de date (RLS). Verifică dacă ai rulat exact scriptul SQL din supabase/schema.sql, secțiunea "Disponibilitate gestionată de psiholog".'
+  }
+  return `A apărut o eroare: ${message}`
+}
+
 export const AdminAvailability: React.FC = () => {
   const today = useMemo(() => {
     const d = new Date()
@@ -25,11 +36,13 @@ export const AdminAvailability: React.FC = () => {
   }, [today])
 
   const [selectedDate, setSelectedDate] = useState<Date>(() => nextBusinessDays(1)[0])
+  const [pendingDate, setPendingDate] = useState<Date | null>(null)
   const [calendarOpen, setCalendarOpen] = useState(false)
   const [blocks, setBlocks] = useState<AvailabilityBlock[]>([])
   const [bookedTimes, setBookedTimes] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
   const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const dateKey = dateToKey(selectedDate)
   const wholeDayBlock = blocks.find((b) => b.time === null)
@@ -55,13 +68,32 @@ export const AdminAvailability: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dateKey])
 
+  const openCalendar = () => {
+    setPendingDate(selectedDate)
+    setCalendarOpen(true)
+    setError(null)
+  }
+
+  const confirmDate = () => {
+    if (pendingDate) setSelectedDate(pendingDate)
+    setCalendarOpen(false)
+  }
+
+  const cancelDate = () => {
+    setPendingDate(null)
+    setCalendarOpen(false)
+  }
+
   const handleToggleWholeDay = async () => {
     setBusy(true)
+    setError(null)
     if (wholeDayBlock) {
-      await deleteAllBlocksForDate(dateKey)
+      const { error: err } = await deleteAllBlocksForDate(dateKey)
+      if (err) setError(describeError(err))
     } else {
-      await deleteAllBlocksForDate(dateKey) // clear any partial-hour blocks first, to avoid duplicates
-      await createBlock(dateKey, null, 'Blocată integral din panoul de admin')
+      const { error: err1 } = await deleteAllBlocksForDate(dateKey) // clear any partial-hour blocks first
+      const { error: err2 } = err1 ? { error: err1 } : await createBlock(dateKey, null, 'Blocată integral din panoul de admin')
+      if (err1 || err2) setError(describeError(err1 || err2))
     }
     setBusy(false)
     load()
@@ -70,11 +102,14 @@ export const AdminAvailability: React.FC = () => {
   const handleToggleHour = async (time: string) => {
     if (wholeDayBlock || bookedTimes.includes(time)) return
     setBusy(true)
+    setError(null)
     const existing = blocks.find((b) => b.time === time)
     if (existing) {
-      await deleteBlock(existing.id)
+      const { error: err } = await deleteBlock(existing.id)
+      if (err) setError(describeError(err))
     } else {
-      await createBlock(dateKey, time)
+      const { error: err } = await createBlock(dateKey, time)
+      if (err) setError(describeError(err))
     }
     setBusy(false)
     load()
@@ -94,7 +129,7 @@ export const AdminAvailability: React.FC = () => {
         <div className="relative">
           <button
             type="button"
-            onClick={() => setCalendarOpen((v) => !v)}
+            onClick={() => (calendarOpen ? cancelDate() : openCalendar())}
             className="flex items-center gap-2.5 rounded-2xl border border-ink/12 bg-white px-4 py-3 text-sm font-medium capitalize text-ink/80 shadow-card transition-colors hover:border-purple/40"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-purple">
@@ -105,21 +140,40 @@ export const AdminAvailability: React.FC = () => {
           </button>
 
           {calendarOpen && (
-            <div className="absolute right-0 z-20 mt-2 w-[320px]">
+            <div className="absolute right-0 z-20 mt-2 w-[320px] space-y-3">
               <CalendarPicker
                 locale="ro-RO"
-                selected={selectedDate}
-                onSelect={(d) => {
-                  setSelectedDate(d)
-                  setCalendarOpen(false)
-                }}
+                selected={pendingDate ?? selectedDate}
+                onSelect={(d) => setPendingDate(d)}
                 minDate={today}
                 maxDate={maxDate}
               />
+              <div className="flex gap-2 rounded-2xl bg-white p-2 shadow-soft ring-1 ring-ink/8">
+                <button
+                  type="button"
+                  onClick={cancelDate}
+                  className="flex-1 rounded-xl px-4 py-2.5 text-sm font-medium text-ink/60 transition-colors hover:bg-mist"
+                >
+                  Anulează
+                </button>
+                <button
+                  type="button"
+                  onClick={confirmDate}
+                  className="flex-1 rounded-xl bg-purple px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-ink"
+                >
+                  Confirmă data
+                </button>
+              </div>
             </div>
           )}
         </div>
       </div>
+
+      {error && (
+        <div className="mt-6 rounded-2xl bg-purple/5 px-5 py-4 text-sm font-medium text-purple" role="alert">
+          {error}
+        </div>
+      )}
 
       {loading ? (
         <p className="mt-8 text-sm text-ink/40">Se încarcă…</p>
@@ -142,7 +196,7 @@ export const AdminAvailability: React.FC = () => {
                   : 'bg-purple text-white hover:bg-ink'
               }`}
             >
-              {wholeDayBlock ? 'Deblochează ziua' : 'Blochează toată ziua'}
+              {busy ? 'Se salvează…' : wholeDayBlock ? 'Deblochează ziua' : 'Blochează toată ziua'}
             </button>
           </div>
 
