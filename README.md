@@ -80,6 +80,16 @@ Ambele platforme detectează automat un proiect Vite. La deploy, adaugă acelea�
 - Dacă anulezi o programare din panoul de admin, ora redevine disponibilă pentru oricine.
 - Vizitatorii obișnuiți nu pot vedea niciodată numele sau telefonul altcuiva — doar tu, din panoul de admin, ai acces la aceste date.
 
+## Pagini legale (Termeni, Confidențialitate, Cookie-uri)
+
+Site-ul include trei pagini, accesibile din footer și legate între ele printr-un mic meniu:
+
+- `/termeni-si-conditii`
+- `/politica-de-confidentialitate`
+- `/politica-cookie-uri`
+
+Conținutul lor e la `src/legal/content.tsx` — text editabil, scris ca un **draft general**, gândit special pentru un cabinet de psihologie online (menționează secretul profesional, ce date sunt colectate prin formulare, unde sunt găzduite — Supabase, în UE — și drepturile GDPR ale vizitatorilor). Nu este o consultanță juridică personalizată: recomand o verificare de către un avocat/consultant specializat în protecția datelor înainte de lansare, mai ales din cauza naturii sensibile a datelor gestionate de un cabinet de psihologie (categorie specială de date, conform GDPR).
+
 ## Design
 
 - Paletă: mov `#7A32A7` / `#8F5CAF`, verde `#689F25`, teal `#31728B`, text `#170633`, fundal discret `#F6F0F9`

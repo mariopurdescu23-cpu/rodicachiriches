@@ -31,7 +31,7 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <span className="text-white/40">{t.contact.email}: </span>
-                <span className="text-white/60">{EMAIL_DISPLAY}</span>
+                <a href={`mailto:${EMAIL_DISPLAY}`} className="hover:text-white transition-colors">{EMAIL_DISPLAY}</a>
               </li>
             </ul>
           </div>
@@ -49,9 +49,9 @@ export const Footer: React.FC = () => {
             </div>
 
             <ul className="mt-6 space-y-2 text-sm text-white/50">
-              <li><a href="#" className="hover:text-white transition-colors">{t.footer.privacy}</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">{t.footer.cookies}</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">{t.footer.terms}</a></li>
+              <li><a href="/politica-de-confidentialitate" className="hover:text-white transition-colors">{t.footer.privacy}</a></li>
+              <li><a href="/politica-cookie-uri" className="hover:text-white transition-colors">{t.footer.cookies}</a></li>
+              <li><a href="/termeni-si-conditii" className="hover:text-white transition-colors">{t.footer.terms}</a></li>
             </ul>
           </div>
         </div>

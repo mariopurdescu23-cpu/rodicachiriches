@@ -2,12 +2,16 @@ import React from 'react'
 import { PRACTITIONER_NAME, PRACTICE_NAME_RO, PRACTICE_NAME_EN } from '../siteInfo'
 import { useLang } from '../i18n'
 
-export const BrandMark: React.FC<{ dark?: boolean; className?: string }> = ({ dark, className = '' }) => {
+export const BrandMark: React.FC<{ dark?: boolean; className?: string; href?: string }> = ({
+  dark,
+  className = '',
+  href = '#acasa',
+}) => {
   const { lang } = useLang()
   const practiceName = lang === 'ro' ? PRACTICE_NAME_RO : PRACTICE_NAME_EN
 
   return (
-    <a href="#acasa" className={`group flex items-center gap-3 ${className}`}>
+    <a href={href} className={`group flex items-center gap-3 ${className}`}>
       <img
         src="/logo.png"
         alt={`${PRACTITIONER_NAME} — ${practiceName}`}
