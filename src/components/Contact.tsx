@@ -1,18 +1,25 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useLang } from '../i18n'
 import { useReveal } from '../hooks/useReveal'
-import { PHONE_RO_DISPLAY, PHONE_RO_TEL, PHONE_UK_DISPLAY, PHONE_UK_TEL, EMAIL_DISPLAY } from '../siteInfo'
+import { Reveal } from './Reveal'
+import {
+  PHONE_RO_DISPLAY,
+  PHONE_RO_TEL,
+  PHONE_RO_WHATSAPP,
+  PHONE_UK_DISPLAY,
+  PHONE_UK_TEL,
+  EMAIL_DISPLAY,
+} from '../siteInfo'
+
+const PhoneIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+  </svg>
+)
 
 export const Contact: React.FC = () => {
   const { t } = useLang()
   const ref = useReveal<HTMLDivElement>()
-  const [sent, setSent] = useState(false)
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Placeholder handler — connect to a real form endpoint / email service when available.
-    setSent(true)
-  }
 
   return (
     <section id="contact" className="py-24 md:py-32 bg-mist/50">
@@ -23,104 +30,76 @@ export const Contact: React.FC = () => {
           <p className="mt-4 text-[17px] leading-relaxed text-ink/70">{t.contact.text}</p>
         </div>
 
-        <div className="mt-12 grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="space-y-5">
+        <div className="mt-12 grid gap-5 lg:grid-cols-[1fr_1fr_1.2fr]">
+          <Reveal delay={0}>
             <a
               href={`tel:${PHONE_UK_TEL}`}
-              className="flex items-center gap-4 rounded-2xl bg-white p-5 shadow-card transition-transform hover:-translate-y-0.5"
+              className="flex h-full items-center gap-4 rounded-2xl bg-white p-5 shadow-card transition-transform hover:-translate-y-0.5"
             >
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-mist text-purple">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
-                </svg>
+                <PhoneIcon />
               </span>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-ink/45">{t.contact.phoneUK}</p>
                 <p className="text-[17px] font-semibold text-ink">{PHONE_UK_DISPLAY}</p>
               </div>
             </a>
+          </Reveal>
 
+          <Reveal delay={80}>
             <a
               href={`tel:${PHONE_RO_TEL}`}
-              className="flex items-center gap-4 rounded-2xl bg-white p-5 shadow-card transition-transform hover:-translate-y-0.5"
+              className="flex h-full items-center gap-4 rounded-2xl bg-white p-5 shadow-card transition-transform hover:-translate-y-0.5"
             >
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-mist text-purple">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
-                </svg>
+                <PhoneIcon />
               </span>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-ink/45">{t.contact.phoneRO}</p>
                 <p className="text-[17px] font-semibold text-ink">{PHONE_RO_DISPLAY}</p>
               </div>
             </a>
+          </Reveal>
 
-            <div className="flex items-center gap-4 rounded-2xl bg-white p-5 shadow-card">
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-mist text-purple">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M4 4h16v16H4z" opacity="0" />
-                  <path d="M22 6l-10 7L2 6" />
-                  <path d="M2 6h20v12H2z" />
+          <Reveal delay={160}>
+            <a
+              href={`https://wa.me/${PHONE_RO_WHATSAPP}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-full items-center gap-4 rounded-2xl bg-purple p-5 shadow-card transition-transform hover:-translate-y-0.5"
+            >
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/15 text-white">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12.04 2c-5.52 0-10 4.48-10 10 0 1.76.46 3.48 1.34 5L2 22l5.13-1.35A9.96 9.96 0 0 0 12.04 22c5.52 0 10-4.48 10-10s-4.48-10-10-10Zm5.85 14.32c-.25.7-1.45 1.34-2 1.42-.51.08-1.16.11-1.87-.12-.43-.14-.98-.32-1.68-.63-2.96-1.28-4.89-4.25-5.04-4.45-.15-.2-1.2-1.6-1.2-3.06 0-1.45.76-2.16 1.03-2.46.27-.3.59-.37.79-.37.2 0 .4 0 .57.01.18.01.43-.07.68.52.25.6.85 2.06.93 2.21.08.15.13.32.03.52-.1.2-.15.32-.3.5-.15.17-.31.39-.44.52-.15.15-.3.31-.13.6.17.3.76 1.26 1.64 2.04 1.13 1 2.08 1.32 2.38 1.47.3.15.47.13.65-.08.18-.2.76-.88.96-1.19.2-.3.4-.25.68-.15.27.1 1.75.83 2.05.98.3.15.5.22.57.35.08.13.08.72-.17 1.42Z" />
                 </svg>
               </span>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-ink/45">{t.contact.email}</p>
-                <p className="text-[17px] font-semibold text-ink/50">{EMAIL_DISPLAY}</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-white/60">WhatsApp</p>
+                <p className="text-[17px] font-semibold text-white">{PHONE_RO_DISPLAY}</p>
               </div>
-            </div>
+            </a>
+          </Reveal>
+        </div>
 
-            {/* Map placeholder — ready for Google Maps embed once the practice address is provided */}
-            <div className="flex h-44 items-center justify-center rounded-2xl bg-white/70 shadow-card ring-1 ring-dashed ring-ink/15">
-              <p className="max-w-[220px] text-center text-xs text-ink/40">{t.contact.mapNote}</p>
+        <div className="mt-5 grid gap-5 lg:grid-cols-[1fr_1fr_1.2fr]">
+          <div className="flex items-center gap-4 rounded-2xl bg-white p-5 shadow-card lg:col-span-2">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-mist text-purple">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M4 4h16v16H4z" opacity="0" />
+                <path d="M22 6l-10 7L2 6" />
+                <path d="M2 6h20v12H2z" />
+              </svg>
+            </span>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-ink/45">{t.contact.email}</p>
+              <p className="text-[17px] font-semibold text-ink/50">{EMAIL_DISPLAY}</p>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="rounded-3xl bg-white p-7 md:p-9 shadow-card space-y-5">
-            <div>
-              <label htmlFor="name" className="mb-1.5 block text-sm font-medium text-ink/70">
-                {t.contact.formName}
-              </label>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                required
-                className="w-full rounded-xl border border-ink/12 px-4 py-3 text-[15px] outline-none transition-colors focus:border-purple"
-              />
-            </div>
-            <div>
-              <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-ink/70">
-                {t.contact.formEmail}
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                className="w-full rounded-xl border border-ink/12 px-4 py-3 text-[15px] outline-none transition-colors focus:border-purple"
-              />
-            </div>
-            <div>
-              <label htmlFor="message" className="mb-1.5 block text-sm font-medium text-ink/70">
-                {t.contact.formMessage}
-              </label>
-              <textarea
-                id="message"
-                name="message"
-                required
-                rows={4}
-                className="w-full resize-none rounded-xl border border-ink/12 px-4 py-3 text-[15px] outline-none transition-colors focus:border-purple"
-              />
-            </div>
-            <button type="submit" className="btn-primary w-full">
-              {t.contact.formSubmit}
-            </button>
-            {sent && (
-              <p className="text-center text-sm text-green" role="status">
-                ✓
-              </p>
-            )}
-          </form>
+          {/* Map placeholder — ready for Google Maps embed once the practice address is provided */}
+          <div className="flex h-full min-h-[96px] items-center justify-center rounded-2xl bg-white/70 shadow-card ring-1 ring-dashed ring-ink/15">
+            <p className="max-w-[220px] text-center text-xs text-ink/40">{t.contact.mapNote}</p>
+          </div>
         </div>
       </div>
     </section>

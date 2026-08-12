@@ -114,6 +114,12 @@ const dict = {
       slotBookedNotice: 'Această oră a fost deja solicitată — alege alta.',
       disclaimer:
         'Disponibilitatea afișată este orientativă și se actualizează pe acest dispozitiv; ora exactă va fi confirmată prin WhatsApp.',
+      confirmTitle: 'Ai trimis mesajul pe WhatsApp?',
+      confirmText: 'Am deschis WhatsApp cu mesajul completat. Confirmă aici doar după ce l-ai trimis efectiv, ca să rezervăm ora pentru tine.',
+      confirmYes: 'Da, am trimis mesajul',
+      confirmNo: 'Nu, vreau altă oră',
+      confirmedTitle: 'Perfect, ora e rezervată',
+      confirmedText: 'Vom reveni cu o confirmare cât mai curând. Ne vedem în ședință!',
     },
     faq: {
       eyebrow: 'Întrebări frecvente',
@@ -269,6 +275,12 @@ const dict = {
       slotBookedNotice: 'This time has already been requested — pick another.',
       disclaimer:
         'Availability shown here is indicative and updates on this device; the exact time will be confirmed via WhatsApp.',
+      confirmTitle: 'Did you send the WhatsApp message?',
+      confirmText: 'We opened WhatsApp with your message filled in. Only confirm here once you\u2019ve actually sent it, so we can hold the slot for you.',
+      confirmYes: 'Yes, I sent it',
+      confirmNo: 'No, pick another time',
+      confirmedTitle: 'Great, the time is held for you',
+      confirmedText: 'We\u2019ll follow up with a confirmation shortly. See you at the session!',
     },
     faq: {
       eyebrow: 'Frequently asked questions',
