@@ -1,56 +1,5 @@
 export const TIME_SLOTS = ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00']
 
-const STORAGE_KEY = 'psiho-booked-slots-v1'
-
-export function slotKey(dateKey: string, time: string) {
-  return `${dateKey}_${time}`
-}
-
-/** Reads the set of already-requested slots from this browser's local storage. */
-export function getBookedSlots(): string[] {
-  if (typeof window === 'undefined') return []
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY)
-    return raw ? (JSON.parse(raw) as string[]) : []
-  } catch {
-    return []
-  }
-}
-
-/** Marks a slot as booked so it shows as unavailable on future visits from this browser. */
-export function markSlotBooked(dateKey: string, time: string) {
-  if (typeof window === 'undefined') return
-  try {
-    const slots = getBookedSlots()
-    const key = slotKey(dateKey, time)
-    if (!slots.includes(key)) {
-      slots.push(key)
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(slots))
-    }
-  } catch {
-    // localStorage unavailable (private browsing, etc.) — booking still proceeds via WhatsApp
-  }
-}
-
-export function isSlotBooked(dateKey: string, time: string): boolean {
-  return getBookedSlots().includes(slotKey(dateKey, time))
-}
-
-/** Removes stored slots for dates already in the past, so local storage doesn't grow forever. */
-export function pruneExpiredSlots() {
-  if (typeof window === 'undefined') return
-  try {
-    const today = dateToKey(new Date())
-    const slots = getBookedSlots()
-    const kept = slots.filter((key) => key.split('_')[0] >= today)
-    if (kept.length !== slots.length) {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(kept))
-    }
-  } catch {
-    // ignore storage errors
-  }
-}
-
 /** Returns the next `count` weekdays (Mon–Fri), starting tomorrow. */
 export function nextBusinessDays(count: number): Date[] {
   const days: Date[] = []

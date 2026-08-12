@@ -1,19 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useLang } from '../i18n'
 import { useReveal } from '../hooks/useReveal'
-import {
-  TIME_SLOTS,
-  nextBusinessDays,
-  dateToKey,
-  formatDayLabel,
-  formatFullDateLabel,
-  isSlotBooked,
-  markSlotBooked,
-  pruneExpiredSlots,
-} from '../lib/booking'
+import { TIME_SLOTS, nextBusinessDays, dateToKey, formatDayLabel, formatFullDateLabel } from '../lib/booking'
+import { fetchBookedTimes, createBooking, subscribeToDateChanges } from '../lib/bookingApi'
 import { buildWhatsAppBookingLink, PHONE_RO_DISPLAY } from '../siteInfo'
 
-type Stage = 'form' | 'confirming' | 'confirmed'
+type Stage = 'form' | 'success'
 
 export const Booking: React.FC = () => {
   const { t, lang } = useLang()
@@ -24,18 +16,40 @@ export const Booking: React.FC = () => {
 
   const [selectedDate, setSelectedDate] = useState<Date>(days[0])
   const [selectedTime, setSelectedTime] = useState<string | null>(null)
+  const [bookedTimes, setBookedTimes] = useState<string[]>([])
+  const [loadingSlots, setLoadingSlots] = useState(true)
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [language, setLanguage] = useState<'ro' | 'en'>(lang)
   const [message, setMessage] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [submitting, setSubmitting] = useState(false)
   const [stage, setStage] = useState<Stage>('form')
 
   const dateKey = dateToKey(selectedDate)
 
+  // Live, shared availability: fetch on date change, then stay in sync via realtime updates
+  // so a slot someone else just booked disappears immediately for every visitor.
   useEffect(() => {
-    pruneExpiredSlots()
-  }, [])
+    let active = true
+    setLoadingSlots(true)
+
+    fetchBookedTimes(dateKey).then((times) => {
+      if (active) {
+        setBookedTimes(times)
+        setLoadingSlots(false)
+      }
+    })
+
+    const unsubscribe = subscribeToDateChanges(dateKey, () => {
+      fetchBookedTimes(dateKey).then((times) => active && setBookedTimes(times))
+    })
+
+    return () => {
+      active = false
+      unsubscribe()
+    }
+  }, [dateKey])
 
   const handlePickDate = (d: Date) => {
     setSelectedDate(d)
@@ -44,20 +58,45 @@ export const Booking: React.FC = () => {
   }
 
   const handlePickTime = (time: string) => {
-    if (isSlotBooked(dateKey, time)) return
+    if (bookedTimes.includes(time)) return
     setSelectedTime(time)
     setError(null)
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!selectedTime) {
       setError(t.booking.noTimeSelected)
       return
     }
-    if (isSlotBooked(dateKey, selectedTime)) {
+    if (bookedTimes.includes(selectedTime)) {
       setError(t.booking.slotBookedNotice)
       setSelectedTime(null)
+      return
+    }
+
+    setSubmitting(true)
+    setError(null)
+
+    const { error: bookingError } = await createBooking({
+      date: dateKey,
+      time: selectedTime,
+      name,
+      phone,
+      language: language === 'ro' ? t.booking.langRo : t.booking.langEn,
+      message,
+    })
+
+    if (bookingError === 'slot_taken') {
+      setError(t.booking.slotTakenRace)
+      setSelectedTime(null)
+      setBookedTimes((prev) => [...prev, selectedTime])
+      setSubmitting(false)
+      return
+    }
+    if (bookingError) {
+      setError(t.booking.genericError)
+      setSubmitting(false)
       return
     }
 
@@ -69,23 +108,10 @@ export const Booking: React.FC = () => {
       time: selectedTime,
       message,
     })
-
-    // The slot is intentionally NOT marked as booked yet — only opening WhatsApp here.
-    // It's held as unavailable once the person confirms they actually sent the message.
     window.open(link, '_blank', 'noopener,noreferrer')
-    setStage('confirming')
-  }
 
-  const handleConfirmSent = () => {
-    if (selectedTime) {
-      markSlotBooked(dateKey, selectedTime)
-    }
-    setStage('confirmed')
-  }
-
-  const handleNotSent = () => {
-    setSelectedTime(null)
-    setStage('form')
+    setSubmitting(false)
+    setStage('success')
   }
 
   return (
@@ -101,39 +127,16 @@ export const Booking: React.FC = () => {
             <p className="mt-5 text-[16px] leading-relaxed text-ink/70">{t.booking.text}</p>
           </div>
 
-          {stage === 'confirming' && (
-            <div className="mt-10 rounded-3xl bg-mist p-7 md:p-9 text-center animate-fadeUp">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white shadow-card">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7A32A7" strokeWidth="2">
-                  <path d="M12 8v4l3 3" />
-                  <circle cx="12" cy="12" r="10" />
-                </svg>
-              </div>
-              <h3 className="mt-5 text-xl font-semibold text-ink">{t.booking.confirmTitle}</h3>
-              <p className="mx-auto mt-3 max-w-md text-[15px] leading-relaxed text-ink/65">
-                {t.booking.confirmText}
-              </p>
-              <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:justify-center">
-                <button type="button" onClick={handleConfirmSent} className="btn-primary">
-                  {t.booking.confirmYes}
-                </button>
-                <button type="button" onClick={handleNotSent} className="btn-secondary">
-                  {t.booking.confirmNo}
-                </button>
-              </div>
-            </div>
-          )}
-
-          {stage === 'confirmed' && (
+          {stage === 'success' && (
             <div className="mt-10 rounded-3xl bg-mist p-7 md:p-9 text-center animate-fadeUp">
               <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-green/10">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#689F25" strokeWidth="2.5">
                   <path d="M20 6 9 17l-5-5" />
                 </svg>
               </div>
-              <h3 className="mt-5 text-xl font-semibold text-ink">{t.booking.confirmedTitle}</h3>
+              <h3 className="mt-5 text-xl font-semibold text-ink">{t.booking.successTitle}</h3>
               <p className="mx-auto mt-3 max-w-md text-[15px] leading-relaxed text-ink/65">
-                {t.booking.confirmedText}
+                {t.booking.successText}
               </p>
             </div>
           )}
@@ -168,30 +171,34 @@ export const Booking: React.FC = () => {
               {/* Time slots */}
               <div>
                 <label className="mb-3 block text-sm font-semibold text-ink/70">{t.booking.formTime}</label>
-                <div className="grid grid-cols-4 gap-2.5 sm:grid-cols-4">
-                  {TIME_SLOTS.map((time) => {
-                    const booked = isSlotBooked(dateKey, time)
-                    const isSelected = selectedTime === time
-                    return (
-                      <button
-                        type="button"
-                        key={time}
-                        disabled={booked}
-                        onClick={() => handlePickTime(time)}
-                        className={`relative rounded-xl border px-3 py-2.5 text-sm font-semibold transition-all duration-300 ${
-                          booked
-                            ? 'cursor-not-allowed border-ink/5 bg-ink/5 text-ink/25 line-through'
-                            : isSelected
-                            ? 'border-purple bg-purple text-white shadow-card'
-                            : 'border-ink/10 bg-white text-ink/75 hover:border-purple/40 hover:bg-mist'
-                        }`}
-                        title={booked ? t.booking.slotUnavailable : undefined}
-                      >
-                        {time}
-                      </button>
-                    )
-                  })}
-                </div>
+                {loadingSlots ? (
+                  <p className="text-sm text-ink/40">{t.booking.loadingSlots}</p>
+                ) : (
+                  <div className="grid grid-cols-4 gap-2.5 sm:grid-cols-4">
+                    {TIME_SLOTS.map((time) => {
+                      const booked = bookedTimes.includes(time)
+                      const isSelected = selectedTime === time
+                      return (
+                        <button
+                          type="button"
+                          key={time}
+                          disabled={booked}
+                          onClick={() => handlePickTime(time)}
+                          className={`relative rounded-xl border px-3 py-2.5 text-sm font-semibold transition-all duration-300 ${
+                            booked
+                              ? 'cursor-not-allowed border-ink/5 bg-ink/5 text-ink/25 line-through'
+                              : isSelected
+                              ? 'border-purple bg-purple text-white shadow-card'
+                              : 'border-ink/10 bg-white text-ink/75 hover:border-purple/40 hover:bg-mist'
+                          }`}
+                          title={booked ? t.booking.slotUnavailable : undefined}
+                        >
+                          {time}
+                        </button>
+                      )
+                    })}
+                  </div>
+                )}
               </div>
 
               <div className="grid gap-5 sm:grid-cols-2">
@@ -266,7 +273,7 @@ export const Booking: React.FC = () => {
                 </p>
               )}
 
-              <button type="submit" className="btn-primary w-full gap-2.5">
+              <button type="submit" disabled={submitting} className="btn-primary w-full gap-2.5 disabled:opacity-60">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                   <path d="M12.04 2c-5.52 0-10 4.48-10 10 0 1.76.46 3.48 1.34 5L2 22l5.13-1.35A9.96 9.96 0 0 0 12.04 22c5.52 0 10-4.48 10-10s-4.48-10-10-10Zm5.85 14.32c-.25.7-1.45 1.34-2 1.42-.51.08-1.16.11-1.87-.12-.43-.14-.98-.32-1.68-.63-2.96-1.28-4.89-4.25-5.04-4.45-.15-.2-1.2-1.6-1.2-3.06 0-1.45.76-2.16 1.03-2.46.27-.3.59-.37.79-.37.2 0 .4 0 .57.01.18.01.43-.07.68.52.25.6.85 2.06.93 2.21.08.15.13.32.03.52-.1.2-.15.32-.3.5-.15.17-.31.39-.44.52-.15.15-.3.31-.13.6.17.3.76 1.26 1.64 2.04 1.13 1 2.08 1.32 2.38 1.47.3.15.47.13.65-.08.18-.2.76-.88.96-1.19.2-.3.4-.25.68-.15.27.1 1.75.83 2.05.98.3.15.5.22.57.35.08.13.08.72-.17 1.42Z" />
                 </svg>

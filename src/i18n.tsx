@@ -112,14 +112,14 @@ const dict = {
       noTimeSelected: 'Selectează mai întâi o zi și o oră.',
       slotUnavailable: 'Indisponibil',
       slotBookedNotice: 'Această oră a fost deja solicitată — alege alta.',
+      slotTakenRace: 'Ora tocmai a fost rezervată de altcineva — alege alta.',
+      genericError: 'A apărut o eroare. Încearcă din nou, te rugăm.',
+      loadingSlots: 'Se încarcă orele disponibile…',
       disclaimer:
-        'Disponibilitatea afișată este orientativă și se actualizează pe acest dispozitiv; ora exactă va fi confirmată prin WhatsApp.',
-      confirmTitle: 'Ai trimis mesajul pe WhatsApp?',
-      confirmText: 'Am deschis WhatsApp cu mesajul completat. Confirmă aici doar după ce l-ai trimis efectiv, ca să rezervăm ora pentru tine.',
-      confirmYes: 'Da, am trimis mesajul',
-      confirmNo: 'Nu, vreau altă oră',
-      confirmedTitle: 'Perfect, ora e rezervată',
-      confirmedText: 'Vom reveni cu o confirmare cât mai curând. Ne vedem în ședință!',
+        'Disponibilitatea este partajată, în timp real, între toți vizitatorii site-ului.',
+      successTitle: 'Cererea ta a fost înregistrată',
+      successText:
+        'Am deschis WhatsApp cu mesajul completat — trimite-l pentru o confirmare rapidă. Ora a fost rezervată pentru tine.',
     },
     faq: {
       eyebrow: 'Întrebări frecvente',
@@ -273,14 +273,13 @@ const dict = {
       noTimeSelected: 'Choose a day and a time first.',
       slotUnavailable: 'Unavailable',
       slotBookedNotice: 'This time has already been requested — pick another.',
-      disclaimer:
-        'Availability shown here is indicative and updates on this device; the exact time will be confirmed via WhatsApp.',
-      confirmTitle: 'Did you send the WhatsApp message?',
-      confirmText: 'We opened WhatsApp with your message filled in. Only confirm here once you\u2019ve actually sent it, so we can hold the slot for you.',
-      confirmYes: 'Yes, I sent it',
-      confirmNo: 'No, pick another time',
-      confirmedTitle: 'Great, the time is held for you',
-      confirmedText: 'We\u2019ll follow up with a confirmation shortly. See you at the session!',
+      slotTakenRace: 'This time was just booked by someone else — pick another.',
+      genericError: 'Something went wrong. Please try again.',
+      loadingSlots: 'Loading available times…',
+      disclaimer: 'Availability is shared in real time across every visitor to the site.',
+      successTitle: 'Your request has been recorded',
+      successText:
+        'We opened WhatsApp with your message filled in — send it for a quick confirmation. The time has been reserved for you.',
     },
     faq: {
       eyebrow: 'Frequently asked questions',
