@@ -41,8 +41,8 @@ export const PhoneMenu: React.FC<{ className?: string }> = ({ className = '' }) 
       </button>
 
       <div
-        className={`absolute bottom-full right-0 mb-3 w-60 origin-bottom-right rounded-2xl bg-white p-2 shadow-soft ring-1 ring-ink/8 transition-all duration-200 ${
-          open ? 'scale-100 opacity-100' : 'pointer-events-none scale-95 opacity-0'
+        className={`fixed inset-x-4 bottom-24 z-50 mx-auto max-w-xs rounded-2xl bg-white p-2 shadow-soft ring-1 ring-ink/8 transition-all duration-200 ${
+          open ? 'translate-y-0 scale-100 opacity-100' : 'pointer-events-none translate-y-2 scale-95 opacity-0'
         }`}
         role="menu"
       >

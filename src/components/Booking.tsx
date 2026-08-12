@@ -1,9 +1,10 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useLang } from '../i18n'
 import { useReveal } from '../hooks/useReveal'
-import { TIME_SLOTS, nextBusinessDays, dateToKey, formatDayLabel } from '../lib/booking'
+import { TIME_SLOTS, nextBusinessDays, dateToKey, formatFullDateLabel } from '../lib/booking'
 import { fetchBookedTimes, createBooking, subscribeToDateChanges } from '../lib/bookingApi'
 import { PHONE_RO_DISPLAY } from '../siteInfo'
+import { CalendarPicker } from './CalendarPicker'
 
 type Stage = 'form' | 'success'
 
@@ -12,12 +13,23 @@ export const Booking: React.FC = () => {
   const ref = useReveal<HTMLDivElement>()
 
   const locale = lang === 'ro' ? 'ro-RO' : 'en-GB'
-  const days = useMemo(() => nextBusinessDays(10), [])
+  const defaultDate = useMemo(() => nextBusinessDays(1)[0], [])
+  const { minDate, maxDate } = useMemo(() => {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const min = new Date(today)
+    min.setDate(today.getDate() + 1)
+    const max = new Date(today)
+    max.setFullYear(today.getFullYear() + 1)
+    return { minDate: min, maxDate: max }
+  }, [])
 
-  const [selectedDate, setSelectedDate] = useState<Date>(days[0])
+  const [selectedDate, setSelectedDate] = useState<Date>(defaultDate)
   const [selectedTime, setSelectedTime] = useState<string | null>(null)
   const [bookedTimes, setBookedTimes] = useState<string[]>([])
   const [loadingSlots, setLoadingSlots] = useState(true)
+  const [calendarOpen, setCalendarOpen] = useState(false)
+  const calendarRef = useRef<HTMLDivElement>(null)
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [language, setLanguage] = useState<'ro' | 'en'>(lang)
@@ -51,10 +63,22 @@ export const Booking: React.FC = () => {
     }
   }, [dateKey])
 
+  useEffect(() => {
+    if (!calendarOpen) return
+    const onClick = (e: MouseEvent) => {
+      if (calendarRef.current && !calendarRef.current.contains(e.target as Node)) {
+        setCalendarOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', onClick)
+    return () => document.removeEventListener('mousedown', onClick)
+  }, [calendarOpen])
+
   const handlePickDate = (d: Date) => {
     setSelectedDate(d)
     setSelectedTime(null)
     setError(null)
+    setCalendarOpen(false)
   }
 
   const handlePickTime = (time: string) => {
@@ -136,25 +160,41 @@ export const Booking: React.FC = () => {
               {/* Date picker */}
               <div>
                 <label className="mb-3 block text-sm font-semibold text-ink/70">{t.booking.formDate}</label>
-                <div className="flex gap-2.5 overflow-x-auto pb-2 -mx-1 px-1">
-                  {days.map((d) => {
-                    const key = dateToKey(d)
-                    const isSelected = key === dateKey
-                    return (
-                      <button
-                        type="button"
-                        key={key}
-                        onClick={() => handlePickDate(d)}
-                        className={`shrink-0 rounded-2xl border px-4 py-3 text-sm font-medium capitalize transition-all duration-300 ${
-                          isSelected
-                            ? 'border-purple bg-purple text-white shadow-card'
-                            : 'border-ink/10 bg-white text-ink/70 hover:border-purple/40 hover:bg-mist'
-                        }`}
-                      >
-                        {formatDayLabel(d, locale)}
-                      </button>
-                    )
-                  })}
+                <div ref={calendarRef} className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setCalendarOpen((v) => !v)}
+                    className="flex w-full items-center justify-between rounded-2xl border border-ink/10 bg-white px-4 py-3.5 text-sm font-medium capitalize text-ink/80 transition-colors hover:border-purple/40"
+                    aria-haspopup="true"
+                    aria-expanded={calendarOpen}
+                  >
+                    <span>{formatFullDateLabel(selectedDate, locale)}</span>
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      className="shrink-0 text-purple"
+                    >
+                      <rect x="3" y="4" width="18" height="18" rx="3" />
+                      <path d="M16 2v4M8 2v4M3 10h18" />
+                    </svg>
+                  </button>
+
+                  {calendarOpen && (
+                    <div className="absolute z-20 mt-2 w-full sm:w-[340px]">
+                      <CalendarPicker
+                        locale={locale}
+                        selected={selectedDate}
+                        onSelect={handlePickDate}
+                        minDate={minDate}
+                        maxDate={maxDate}
+                        isDayDisabled={(d) => d.getDay() === 0 || d.getDay() === 6}
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
 
