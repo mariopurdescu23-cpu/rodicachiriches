@@ -146,7 +146,7 @@ const dict = {
     contact: {
       eyebrow: 'Contact',
       title: 'Hai să vorbim',
-      text: 'Poți alege modalitatea care ți se potrivește: telefon, email sau formularul de mai jos.',
+      text: 'Poți alege modalitatea de contact care ți se potrivește: telefon, e-mail sau formularul de mai jos.',
       phoneRO: 'Telefon România',
       phoneUK: 'Telefon UK',
       email: 'Email',
@@ -154,7 +154,6 @@ const dict = {
       formEmail: 'Email',
       formMessage: 'Mesajul tău',
       formSubmit: 'Trimite mesajul',
-      mapNote: 'Harta va fi disponibilă după confirmarea adresei cabinetului.',
     },
     footer: {
       rights: 'Toate drepturile rezervate.',
@@ -305,7 +304,7 @@ const dict = {
     contact: {
       eyebrow: 'Contact',
       title: 'Let\u2019s talk',
-      text: 'Choose whichever way suits you: phone, email, or the form below.',
+      text: 'Choose whichever contact method suits you best: phone, email, or the form below.',
       phoneRO: 'Phone Romania',
       phoneUK: 'Phone UK',
       email: 'Email',
@@ -313,7 +312,6 @@ const dict = {
       formEmail: 'Email',
       formMessage: 'Your message',
       formSubmit: 'Send message',
-      mapNote: 'The map will be available once the practice address is confirmed.',
     },
     footer: {
       rights: 'All rights reserved.',

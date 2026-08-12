@@ -9,7 +9,7 @@ export const PHONE_RO_WHATSAPP = '40756262594'
 export const PHONE_UK_DISPLAY = '+44 7470 433 212'
 export const PHONE_UK_TEL = '+447470433212'
 
-export const EMAIL_DISPLAY = '[EMAIL]'
+export const EMAIL_DISPLAY = 'mariachiriches@outlook.com'
 
 /** Builds a wa.me link pre-filled with a booking brief, ready to send. */
 export function buildWhatsAppBookingLink(params: {

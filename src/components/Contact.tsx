@@ -81,25 +81,25 @@ export const Contact: React.FC = () => {
           </Reveal>
         </div>
 
-        <div className="mt-5 grid gap-5 lg:grid-cols-[1fr_1fr_1.2fr]">
-          <div className="flex items-center gap-4 rounded-2xl bg-white p-5 shadow-card lg:col-span-2">
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-mist text-purple">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M4 4h16v16H4z" opacity="0" />
-                <path d="M22 6l-10 7L2 6" />
-                <path d="M2 6h20v12H2z" />
-              </svg>
-            </span>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-ink/45">{t.contact.email}</p>
-              <p className="text-[17px] font-semibold text-ink/50">{EMAIL_DISPLAY}</p>
-            </div>
-          </div>
-
-          {/* Map placeholder — ready for Google Maps embed once the practice address is provided */}
-          <div className="flex h-full min-h-[96px] items-center justify-center rounded-2xl bg-white/70 shadow-card ring-1 ring-dashed ring-ink/15">
-            <p className="max-w-[220px] text-center text-xs text-ink/40">{t.contact.mapNote}</p>
-          </div>
+        <div className="mt-5 grid gap-5">
+          <Reveal delay={240}>
+            <a
+              href={`mailto:${EMAIL_DISPLAY}`}
+              className="flex items-center gap-4 rounded-2xl bg-white p-5 shadow-card transition-transform hover:-translate-y-0.5"
+            >
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-mist text-purple">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M4 4h16v16H4z" opacity="0" />
+                  <path d="M22 6l-10 7L2 6" />
+                  <path d="M2 6h20v12H2z" />
+                </svg>
+              </span>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-ink/45">{t.contact.email}</p>
+                <p className="text-[17px] font-semibold text-ink">{EMAIL_DISPLAY}</p>
+              </div>
+            </a>
+          </Reveal>
         </div>
       </div>
     </section>
