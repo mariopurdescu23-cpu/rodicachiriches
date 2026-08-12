@@ -120,8 +120,8 @@ const dict = {
     },
     booking: {
       eyebrow: 'Programare',
-      title: 'Programează o primă discuție',
-      text: 'Alege o zi și o oră disponibilă și completează câteva detalii — programarea se rezervă imediat.',
+      title: 'Programează prima ședință',
+      text: 'Alege ziua și ora potrivite pentru tine și completează datele de contact pentru a solicita programarea.',
       cta: 'Programează o ședință',
       formName: 'Nume',
       formPhone: 'Telefon',
@@ -303,8 +303,8 @@ const dict = {
     },
     booking: {
       eyebrow: 'Booking',
-      title: 'Book an initial conversation',
-      text: 'Pick an available day and time and add a few details — the booking is reserved right away.',
+      title: 'Book your first session',
+      text: 'Choose a day and time that works for you and complete your contact details to request an appointment.',
       cta: 'Book a session',
       formName: 'Name',
       formPhone: 'Phone',
